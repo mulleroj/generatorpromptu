@@ -101,6 +101,133 @@ body {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+  50% {
+    transform: translateX(120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-6%);
+  }
+}
+
+@keyframes cardFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.3;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes headerSweep {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scaleX(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes pillGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(70, 247, 183, 0);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(70, 247, 183, 0.3);
+  }
+}
+
+@keyframes borderGlow {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes fieldPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(108, 140, 255, 0);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(108, 140, 255, 0.08);
+  }
+}
+
+@keyframes activePulse {
+  0%,
+  100% {
+    box-shadow: 0 10px 20px rgba(108, 140, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 16px 26px rgba(108, 140, 255, 0.45);
+  }
+}
+
+@keyframes emojiFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) rotate(-3deg) scale(1.03);
+  }
+}
+
+@keyframes headingGlow {
+  0%,
+  100% {
+    text-shadow: 0 0 0 rgba(108, 140, 255, 0);
+  }
+  50% {
+    text-shadow: 0 0 16px rgba(108, 140, 255, 0.35);
+  }
+}
+
 .hero {
   position: relative;
   z-index: 1;
@@ -114,6 +241,12 @@ body {
 .hero-content h1 {
   font-size: clamp(2.6rem, 4vw, 4rem);
   margin: 16px 0 16px;
+  background: linear-gradient(120deg, #ffffff, #6c8cff, #8b5bff, #ffffff);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: titleShift 8s ease-in-out infinite;
 }
 
 .hero-content p {
@@ -130,6 +263,28 @@ body {
   border: 1px solid rgba(108, 140, 255, 0.4);
   font-size: 0.85rem;
   letter-spacing: 0.02em;
+  position: relative;
+  overflow: hidden;
+}
+
+.badge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.22) 45%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: shimmer 4.2s ease-in-out infinite;
+}
+
+.emoji {
+  display: inline-block;
+  animation: emojiFloat 3.6s ease-in-out infinite;
+  transform-origin: center;
 }
 
 .hero-actions {
@@ -146,6 +301,9 @@ body {
   border-radius: 20px;
   padding: 20px;
   backdrop-filter: blur(10px);
+  animation: cardFloat 10s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
 }
 
 .hero-card-header {
@@ -153,6 +311,16 @@ body {
   font-size: 0.9rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  position: relative;
+}
+
+.hero-card-header::after {
+  content: "";
+  display: block;
+  height: 2px;
+  margin-top: 10px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  animation: headerSweep 6s ease-in-out infinite;
 }
 
 .hero-card pre {
@@ -161,6 +329,7 @@ body {
   font-size: 0.95rem;
   line-height: 1.5;
   color: var(--text);
+  animation: fadeIn 1.2s ease;
 }
 
 .hero-card-footer {
@@ -175,6 +344,7 @@ body {
   border-radius: 999px;
   font-size: 0.8rem;
   color: var(--muted);
+  animation: pillGlow 5s ease-in-out infinite;
 }
 
 .builder {
@@ -192,11 +362,40 @@ body {
   padding: 24px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(14px);
+  animation: cardFloat 14s ease-in-out infinite;
+  position: relative;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background: linear-gradient(
+      140deg,
+      rgba(108, 140, 255, 0.4),
+      transparent 40%,
+      rgba(139, 91, 255, 0.35)
+    )
+    border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  animation: borderGlow 9s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .card-header h2 {
   margin: 0 0 6px;
   font-size: 1.4rem;
+  position: relative;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  animation: headingGlow 6s ease-in-out infinite;
 }
 
 .card-header p {
@@ -231,6 +430,7 @@ textarea {
   color: var(--text);
   font-size: 0.95rem;
   transition: border 0.2s ease, box-shadow 0.2s ease;
+  animation: fieldPulse 9s ease-in-out infinite;
 }
 
 input:focus,
@@ -286,6 +486,7 @@ textarea:focus {
   background: linear-gradient(135deg, var(--primary), var(--accent));
   color: #fff;
   box-shadow: 0 10px 20px rgba(108, 140, 255, 0.3);
+  animation: activePulse 3s ease-in-out infinite;
 }
 
 .btn {
@@ -301,6 +502,8 @@ textarea:focus {
   background: linear-gradient(135deg, var(--primary), var(--accent));
   color: #fff;
   box-shadow: 0 10px 30px rgba(108, 140, 255, 0.35);
+  position: relative;
+  overflow: hidden;
 }
 
 .btn.ghost {
@@ -312,6 +515,20 @@ textarea:focus {
   transform: translateY(-2px);
 }
 
+.btn.primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 45%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: shimmer 3.5s ease-in-out infinite;
+}
+
 .output {
   position: relative;
 }
@@ -320,6 +537,8 @@ textarea:focus {
   background: rgba(5, 7, 13, 0.7);
   border-radius: 16px;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
 .output pre {
@@ -340,6 +559,20 @@ textarea:focus {
   margin-top: 12px;
   color: var(--success);
   min-height: 18px;
+}
+
+.output-box::before {
+  content: "";
+  position: absolute;
+  inset: -40% 0 auto 0;
+  height: 180%;
+  background: radial-gradient(
+    circle at top,
+    rgba(108, 140, 255, 0.25),
+    transparent 55%
+  );
+  animation: glowPulse 6s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .footer {

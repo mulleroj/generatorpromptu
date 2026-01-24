@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Infographic Prompt Builder • Modern</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="ambient">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="grid"></div>
+    </div>
+
+    <header class="hero">
+      <div class="hero-content">
+        <span class="badge">🎨 Modern Prompt Builder</span>
+        <h1>Infographic Prompt Builder</h1>
+        <p>
+          Vytvoř si prompt pro NotebookLM nebo Nano Banana Pro přesně podle
+          zadání. Stejné funkce, nový moderní animovaný vzhled.
+        </p>
+        <div class="hero-actions">
+          <button class="btn primary" id="scroll-to-builder">
+            Začít tvořit
+          </button>
+          <button class="btn ghost" id="reset-top">Reset</button>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-header">Živý náhled promptu</div>
+        <pre id="hero-preview" aria-live="polite">
+Zadej témata a klikni na „Generovat prompt“.
+        </pre>
+        <div class="hero-card-footer">
+          <span class="pill">42 000+ kombinací</span>
+          <span class="pill">NotebookLM & Gemini</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="builder" id="builder">
+      <section class="card">
+        <div class="card-header">
+          <h2>📝 Obsah & struktura</h2>
+          <p>Vyber základní rámec a cílové publikum.</p>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Téma / Hlavní předmět *</span>
+            <input
+              id="subject"
+              type="text"
+              placeholder="Např. Oběh vody v přírodě"
+              required
+            />
+          </label>
+
+          <label class="field">
+            <span>Cílové publikum *</span>
+            <select id="audience" required>
+              <option value="">-- Vyber --</option>
+              <option value="Začátečníci / Škola">Začátečníci / Škola</option>
+              <option value="Profesionálové / B2B">Profesionálové / B2B</option>
+              <option value="Obecné publikum">Obecné publikum</option>
+              <option value="Děti">Děti</option>
+              <option value="Experti / Technické">Experti / Technické</option>
+            </select>
+          </label>
+
+          <label class="field full">
+            <span>Typ struktury *</span>
+            <select id="structure" required>
+              <option value="">-- Vyber --</option>
+              <option value="Seznam / Bullets (4-5 bodů)">
+                📋 Seznam / Bullets (4-5 bodů)
+              </option>
+              <option value="Časová osa / Timeline">
+                ⏰ Časová osa / Timeline
+              </option>
+              <option value="Proces / Kroky (5-7)">
+                ➡️ Proces / Kroky (5-7)
+              </option>
+              <option value="Porovnání (2-3 sloupce)">
+                ⚖️ Porovnání (2-3 sloupce)
+              </option>
+              <option value="Hierarchie / Pyramida">
+                🏢 Hierarchie / Pyramida
+              </option>
+              <option value="Cyklické / Kruh">
+                ♻️ Cyklické / Kruh
+              </option>
+              <option value="Myšlenková mapa / Mind map">
+                🧠 Myšlenková mapa / Mind map
+              </option>
+              <option value="Dashboard / KPI">
+                📊 Dashboard / KPI
+              </option>
+              <option value="Před / Po">
+                🔄 Před / Po
+              </option>
+              <option value="Trychtýř / Funnel">
+                📻 Trychtýř / Funnel
+              </option>
+            </select>
+          </label>
+
+          <label class="field full">
+            <span>Další informace (volitelné)</span>
+            <textarea
+              id="extra"
+              rows="4"
+              placeholder="Např. obsahovat čísla, statistiky, konkrétní zdroje..."
+            ></textarea>
+          </label>
+
+          <div class="field full">
+            <span>Pokročilé volby</span>
+            <div class="toggle-row">
+              <label class="toggle">
+                <input id="fix-typography" type="checkbox" />
+                <span>Explicitně opravit typografii nadpisů</span>
+              </label>
+              <label class="toggle">
+                <input id="spellcheck" type="checkbox" />
+                <span>Vynutit kontrolu pravopisu (beta)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>🎭 Styl & formát</h2>
+          <p>Definuj vizuál, poměr stran a úroveň detailu.</p>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Formát / Aspect ratio *</span>
+            <select id="ratio" required>
+              <option value="">-- Vyber --</option>
+              <option value="16:9 (Krajina / Prezentace)">
+                16:9 (Krajina / Prezentace)
+              </option>
+              <option value="1:1 (Čtverec / Instagram)">
+                1:1 (Čtverec / Instagram)
+              </option>
+              <option value="9:16 (Portrét / Mobile)">
+                9:16 (Portrét / Mobile)
+              </option>
+              <option value="A4 (Tisk)">A4 (Tisk)</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Styl vizuálu *</span>
+            <select id="style" required></select>
+          </label>
+
+          <label class="field">
+            <span>Paleta barev</span>
+            <select id="palette">
+              <option value="Automaticky (dle stylu)">
+                Automaticky (dle stylu)
+              </option>
+              <option value="Modrá & bílá (corporate)">
+                Modrá & bílá (corporate)
+              </option>
+              <option value="Teplá (oranžová, červená, okr)">
+                Teplá (oranžová, červená, okr)
+              </option>
+              <option value="Pastelová (jemná, uklidňující)">
+                Pastelová (jemná, uklidňující)
+              </option>
+              <option value="Neon (futuristická)">Neon (futuristická)</option>
+              <option value="Přírodní (zelená, hnědá, béžová)">
+                Přírodní (zelená, hnědá, béžová)
+              </option>
+              <option value="Monochromatická">Monochromatická</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Úroveň detailu *</span>
+            <div class="segmented" role="group" aria-label="Úroveň detailu">
+              <button type="button" data-detail="Minimalistická">
+                Minimalistická
+              </button>
+              <button type="button" data-detail="Standardní" class="active">
+                Standardní
+              </button>
+              <button type="button" data-detail="Detailní">Detailní</button>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <section class="card output">
+        <div class="card-header">
+          <h2>✨ Vygenerovaný prompt</h2>
+          <p>Prompt je připravený ke zkopírování.</p>
+        </div>
+        <div class="output-box">
+          <pre id="prompt-output" aria-live="polite"></pre>
+          <div class="output-actions">
+            <button class="btn primary" id="generate">
+              🚀 Generovat prompt
+            </button>
+            <button class="btn ghost" id="reset">🔄 Reset</button>
+            <button class="btn ghost" id="copy">📋 Kopírovat</button>
+          </div>
+          <div class="copy-status" id="copy-status" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        Tip: Prompt vlož přímo do NotebookLM (Studio &gt; Infographic) nebo
+        Gemini s důvěryhodným zdrojem.
+      </p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -306,6 +306,10 @@ body {
   overflow: hidden;
 }
 
+.hero-card:hover {
+  animation-play-state: paused;
+}
+
 .hero-card-header {
   color: var(--muted);
   font-size: 0.9rem;
@@ -364,6 +368,11 @@ body {
   backdrop-filter: blur(14px);
   animation: cardFloat 14s ease-in-out infinite;
   position: relative;
+}
+
+.card:hover,
+.card:focus-within {
+  animation-play-state: paused;
 }
 
 .card::before {
@@ -439,6 +448,13 @@ textarea:focus {
   outline: none;
   border-color: rgba(108, 140, 255, 0.7);
   box-shadow: 0 0 0 3px rgba(108, 140, 255, 0.2);
+  animation: none;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  animation-play-state: paused;
 }
 
 .full {

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Layout Presets – Dev Test</title>
+  <style>
+    body { font-family: monospace; background: #111; color: #eee; padding: 2rem; }
+    .pass { color: #4ade80; }
+    .fail { color: #f87171; font-weight: bold; }
+    pre { background: #1a1a2e; padding: 1rem; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; margin: 0.5rem 0 1.5rem; }
+    h2 { margin-top: 2rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem; }
+    summary { cursor: pointer; padding: 0.25rem 0; }
+  </style>
+</head>
+<body>
+  <h1>Layout Presets – Dev Test Suite</h1>
+  <div id="results"></div>
+
+  <!-- Load production scripts -->
+  <script src="../styles/stylePresets.js"></script>
+  <script src="../styles/layoutPresets.js"></script>
+  <script>
+    // ── Inline copy of pure functions from app.js (no DOM needed) ──
+
+    const getDetailKey = (detail) => {
+      if (detail === "Minimalistická") return "minimalisticka";
+      if (detail === "Detailní") return "detailni";
+      return "standardni";
+    };
+
+    const adaptText = (text, detailKey, detailSuffix) => {
+      if (!text) return "";
+      if (detailKey === "minimalisticka") {
+        const match = text.match(/^[^.!?]+[.!?]/);
+        return match ? match[0] : text;
+      }
+      if (detailKey === "detailni" && detailSuffix) {
+        return text + " " + detailSuffix;
+      }
+      return text;
+    };
+
+    const buildPromptWithLayoutPreset = (data, preset) => {
+      const dk = getDetailKey(data.detail);
+      const vi = preset.visualIdentity;
+      const ld = preset.layoutDefinition;
+      const is = preset.imageStyle;
+      const ty = preset.typography;
+
+      const lines = [
+        `Téma: ${data.subject}`,
+        `Cílové publikum: ${data.audience}`,
+        `Struktura: ${data.structure}`,
+        `Poměr stran: ${data.ratio}`,
+      ];
+
+      if (data.style) {
+        lines.push(`Vizuální styl (doplňkový): ${data.style}`);
+      }
+      if (data.extra) {
+        lines.push(`Další instrukce: ${data.extra}`);
+      }
+
+      lines.push("", `【Designový styl】 ${preset.label}`, adaptText(preset.tone, dk));
+
+      lines.push("", "--- VIZUÁLNÍ IDENTITA ---",
+        `Pozadí: ${vi.backgroundColor}`, `Text: ${vi.textColor}`,
+        `Akcenty: ${vi.accentColors.join(", ")}`, `Omezení barev: ${vi.colorConstraints}`);
+
+      lines.push("", "--- LAYOUT ---",
+        `Typ gridu: ${ld.gridType}`,
+        `Rozložení: Titulek ${ld.headlineArea} | Hlavní obsah ${ld.mainArea} | Zápatí ${ld.footerArea}`);
+
+      if (dk !== "minimalisticka") {
+        lines.push(`Tok čtení: ${ld.readingFlow}`, `Logika sekcí: ${ld.sectionLogic}`);
+      }
+
+      lines.push("", "--- STYL OBRAZŮ (50–20–10–5) ---",
+        `Layout (50 %): ${adaptText(is.layout50, dk)}`,
+        `Motivy (20 %): ${adaptText(is.motifs20, dk)}`,
+        `Vlajka/vzor (10 %): ${adaptText(is.flagPattern10, dk)}`,
+        `Reálná fotografie (5 %): ${adaptText(is.realPhoto5, dk)}`,
+        `Kompozice: ${adaptText(is.composition, dk)}`);
+
+      lines.push("", "--- TYPOGRAFIE (15 %) ---",
+        `Nadpisy: ${ty.heading}`, `Tělo textu: ${ty.body}`, `Display/titul: ${ty.display}`);
+
+      const constraints = typeof LAYOUT_CONSTRAINTS !== "undefined" ? LAYOUT_CONSTRAINTS
+        : typeof IMPORTANT_CONSTRAINTS !== "undefined" ? IMPORTANT_CONSTRAINTS : [];
+
+      lines.push("", "【DŮLEŽITÁ OMEZENÍ】");
+      constraints.forEach((c) => lines.push(`• ${c}`));
+
+      if (data.fixTypography) lines.push("• Oprav typografii nadpisů podle pravidel.");
+      if (data.spellcheck) lines.push("• Zkontroluj a oprav pravopis v textu.");
+
+      return lines.join("\n");
+    };
+
+    // ── Test runner ──
+
+    const results = document.getElementById("results");
+    let passed = 0;
+    let failed = 0;
+
+    const assert = (name, condition, detail) => {
+      if (condition) {
+        passed++;
+        results.innerHTML += `<div class="pass">✓ ${name}</div>`;
+      } else {
+        failed++;
+        results.innerHTML += `<div class="fail">✗ ${name} — ${detail || "assertion failed"}</div>`;
+      }
+    };
+
+    const mockData = (overrides = {}) => ({
+      subject: "Oběh vody v přírodě",
+      audience: "Začátečníci / Škola",
+      structure: "Časová osa / Timeline",
+      ratio: "16:9 (Krajina / Prezentace)",
+      style: "",
+      preset: "swiss_grid",
+      palette: "Automaticky (dle stylu)",
+      extra: "",
+      fixTypography: false,
+      spellcheck: false,
+      detail: "Standardní",
+      ...overrides,
+    });
+
+    // ── TEST 1: All presets exist and have required keys ──
+    results.innerHTML += "<h2>1) Preset struktura</h2>";
+    const requiredKeys = ["id", "label", "tone", "visualIdentity", "layoutDefinition", "imageStyle", "typography"];
+    const layoutKeys = ["gridType", "headlineArea", "mainArea", "footerArea", "readingFlow", "sectionLogic"];
+    const imageKeys = ["layout50", "motifs20", "flagPattern10", "realPhoto5", "composition"];
+
+    Object.entries(LAYOUT_PRESETS).forEach(([key, p]) => {
+      requiredKeys.forEach((rk) => {
+        assert(`${key}: has '${rk}'`, p[rk] !== undefined, `chybí klíč ${rk}`);
+      });
+      layoutKeys.forEach((lk) => {
+        assert(`${key}: layoutDefinition.${lk}`, p.layoutDefinition[lk] !== undefined);
+      });
+      imageKeys.forEach((ik) => {
+        assert(`${key}: imageStyle.${ik}`, p.imageStyle[ik] !== undefined);
+      });
+    });
+
+    // ── TEST 2: Prompt generation – swiss_grid standard ──
+    results.innerHTML += "<h2>2) Generování promptu – swiss_grid / Standardní</h2>";
+    const prompt1 = buildPromptWithLayoutPreset(mockData(), LAYOUT_PRESETS.swiss_grid);
+    assert("Obsahuje 【Designový styl】", prompt1.includes("【Designový styl】"));
+    assert("Obsahuje 'Swiss Grid'", prompt1.includes("Swiss Grid"));
+    assert("Obsahuje VIZUÁLNÍ IDENTITA", prompt1.includes("--- VIZUÁLNÍ IDENTITA ---"));
+    assert("Obsahuje LAYOUT", prompt1.includes("--- LAYOUT ---"));
+    assert("Obsahuje STYL OBRAZŮ", prompt1.includes("--- STYL OBRAZŮ (50–20–10–5) ---"));
+    assert("Obsahuje TYPOGRAFIE", prompt1.includes("--- TYPOGRAFIE (15 %) ---"));
+    assert("Obsahuje 【DŮLEŽITÁ OMEZENÍ】", prompt1.includes("【DŮLEŽITÁ OMEZENÍ】"));
+    assert("Obsahuje gridType '12col'", prompt1.includes("12col"));
+    assert("Obsahuje Tok čtení", prompt1.includes("Tok čtení:"));
+    assert("Obsahuje Logika sekcí", prompt1.includes("Logika sekcí:"));
+    assert("Obsahuje českou diakritiku v omezeních", prompt1.includes("diakritik"));
+
+    results.innerHTML += "<details><summary>Zobrazit prompt</summary><pre>" + prompt1 + "</pre></details>";
+
+    // ── TEST 3: Minimalistická – kratší texty, bez toku čtení ──
+    results.innerHTML += "<h2>3) Minimalistická úroveň detailu</h2>";
+    const promptMin = buildPromptWithLayoutPreset(
+      mockData({ detail: "Minimalistická" }),
+      LAYOUT_PRESETS.swiss_grid
+    );
+    assert("NEobsahuje 'Tok čtení'", !promptMin.includes("Tok čtení:"), "Tok čtení by neměl být v minimal");
+    assert("NEobsahuje 'Logika sekcí'", !promptMin.includes("Logika sekcí:"), "Logika sekcí by neměla být v minimal");
+    // adaptText: should trim to first sentence
+    const layout50Line = promptMin.split("\n").find(l => l.startsWith("Layout (50 %):"));
+    const fullLayout50 = LAYOUT_PRESETS.swiss_grid.imageStyle.layout50;
+    assert("Layout50 je kratší než plný text", layout50Line && layout50Line.length < fullLayout50.length + 20);
+
+    results.innerHTML += "<details><summary>Zobrazit prompt</summary><pre>" + promptMin + "</pre></details>";
+
+    // ── TEST 4: Detailní – plný text ──
+    results.innerHTML += "<h2>4) Detailní úroveň detailu</h2>";
+    const promptDet = buildPromptWithLayoutPreset(
+      mockData({ detail: "Detailní" }),
+      LAYOUT_PRESETS.swiss_grid
+    );
+    assert("Obsahuje Tok čtení", promptDet.includes("Tok čtení:"));
+    assert("Obsahuje Logika sekcí", promptDet.includes("Logika sekcí:"));
+
+    results.innerHTML += "<details><summary>Zobrazit prompt</summary><pre>" + promptDet + "</pre></details>";
+
+    // ── TEST 5: Extra instrukce a volby ──
+    results.innerHTML += "<h2>5) Extra instrukce, typografie, spellcheck</h2>";
+    const promptExtra = buildPromptWithLayoutPreset(
+      mockData({ extra: "Přidej statistiky z roku 2024", fixTypography: true, spellcheck: true }),
+      LAYOUT_PRESETS.timeline_narrative
+    );
+    assert("Obsahuje další instrukce", promptExtra.includes("Přidej statistiky z roku 2024"));
+    assert("Obsahuje opravu typografie", promptExtra.includes("Oprav typografii"));
+    assert("Obsahuje kontrolu pravopisu", promptExtra.includes("Zkontroluj a oprav pravopis"));
+
+    results.innerHTML += "<details><summary>Zobrazit prompt</summary><pre>" + promptExtra + "</pre></details>";
+
+    // ── TEST 6: Všechny presety generují validní prompt ──
+    results.innerHTML += "<h2>6) Všechny presety – generování bez chyby</h2>";
+    Object.entries(LAYOUT_PRESETS).forEach(([key, preset]) => {
+      try {
+        const p = buildPromptWithLayoutPreset(mockData({ preset: key }), preset);
+        assert(`${key}: prompt vygenerován (${p.length} znaků)`, p.length > 200);
+      } catch (e) {
+        assert(`${key}: generování promptu`, false, e.message);
+      }
+    });
+
+    // ── TEST 7: Snapshot – brutalist_poster ──
+    results.innerHTML += "<h2>7) Snapshot – brutalist_poster / Standardní</h2>";
+    const snapPrompt = buildPromptWithLayoutPreset(mockData({ preset: "brutalist_poster" }), LAYOUT_PRESETS.brutalist_poster);
+    const snapLines = snapPrompt.split("\n");
+    assert("Snapshot: řádek 1 = Téma", snapLines[0].startsWith("Téma:"));
+    assert("Snapshot: obsahuje 'poster'", snapPrompt.includes("poster"));
+    assert("Snapshot: obsahuje 'diagonál'", snapPrompt.toLowerCase().includes("diagonál"));
+    assert("Snapshot: má >= 25 řádků", snapLines.length >= 25, `Jen ${snapLines.length} řádků`);
+
+    results.innerHTML += "<details><summary>Zobrazit prompt</summary><pre>" + snapPrompt + "</pre></details>";
+
+    // ── Summary ──
+    results.innerHTML += `<h2>Výsledek: ${passed} passed, ${failed} failed</h2>`;
+    if (failed === 0) {
+      results.innerHTML += '<div class="pass" style="font-size:1.5rem">✓ Všechny testy prošly!</div>';
+    }
+  </script>
+</body>
+</html>

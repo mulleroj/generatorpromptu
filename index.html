@@ -164,30 +164,76 @@ Zadej témata a klikni na „Generovat prompt“.
           </label>
 
           <label class="field">
-            <span>Styl vizuálu *</span>
-            <select id="style" required></select>
+            <span>Styl vizuálu <em id="style-required">*</em></span>
+            <select id="style"></select>
           </label>
 
           <label class="field">
-            <span>Paleta barev</span>
+            <span>Layout preset</span>
+            <select id="preset">
+              <option value="">-- Žádný (výchozí rozvržení) --</option>
+              <optgroup label="Univerzální layouty">
+                <option value="standard_grid">Standard Grid (3–5 bloků)</option>
+                <option value="swiss_grid">Swiss Grid (přesná mřížka)</option>
+                <option value="timeline">Timeline (vertikální časová osa)</option>
+                <option value="radial">Radial (střed + segmenty)</option>
+                <option value="magazine">Magazine (headline + 2 sloupce)</option>
+                <option value="dashboard">Dashboard (KPI pás + 2×2 grid)</option>
+                <option value="research_poster">Research Poster (3 sloupce)</option>
+                <option value="brutalist_poster">Brutalist Poster (plakát + diagonály)</option>
+              </optgroup>
+              <optgroup label="Evropa">
+                <option value="czech_cubism">Česko (Bohemian Cubism + Secese)</option>
+                <option value="germany_bauhaus">Německo (Bauhaus Functional Grid)</option>
+                <option value="france_art_deco_parisien">Francie (Art Déco Parisien)</option>
+                <option value="uk_british_editorial">Velká Británie (British Editorial)</option>
+                <option value="italy_renaissance">Itálie (Renaissance Symmetry)</option>
+                <option value="spain_iberian_mosaic">Španělsko (Iberian Mosaic)</option>
+                <option value="austria_wiener_secession">Rakousko (Wiener Secession)</option>
+                <option value="greece_classical_frieze">Řecko (Classical Frieze)</option>
+                <option value="cyprus_mediterranean_mosaic">Kypr (Mediterranean Mosaic)</option>
+                <option value="norway_fjord_nordic">Norsko (Fjord Nordic)</option>
+                <option value="sweden_scandinavian_clean">Švédsko (Scandinavian Clean)</option>
+              </optgroup>
+              <optgroup label="Amerika">
+                <option value="usa_american_bold">USA (American Bold Magazine)</option>
+                <option value="canada_northern_clean">Kanada (Northern Clean)</option>
+                <option value="brazil_tropical_modern">Brazílie (Tropical Modern)</option>
+              </optgroup>
+              <optgroup label="Asie & Afrika & Oceánie">
+                <option value="japan_zen_minimal">Japonsko (Zen Minimal)</option>
+                <option value="china_ink_scroll">Čína (Ink Scroll)</option>
+                <option value="india_mandala_infographic">Indie (Mandala Grid)</option>
+                <option value="egypt_papyrus_archaeology">Egypt (Papyrus Archaeology)</option>
+                <option value="australia_oceanic_modern">Austrálie (Oceanic Modern)</option>
+              </optgroup>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Color Mode (režim palety)</span>
             <select id="palette">
-              <option value="Automaticky (dle stylu)">
-                Automaticky (dle stylu)
-              </option>
-              <option value="Modrá & bílá (corporate)">
-                Modrá & bílá (corporate)
-              </option>
-              <option value="Teplá (oranžová, červená, okr)">
-                Teplá (oranžová, červená, okr)
-              </option>
-              <option value="Pastelová (jemná, uklidňující)">
-                Pastelová (jemná, uklidňující)
-              </option>
-              <option value="Neon (futuristická)">Neon (futuristická)</option>
-              <option value="Přírodní (zelená, hnědá, béžová)">
-                Přírodní (zelená, hnědá, béžová)
-              </option>
-              <option value="Monochromatická">Monochromatická</option>
+              <option value="auto">Automaticky (dle stylu)</option>
+              <optgroup label="Základní">
+                <option value="corporate_blue_white">Modrá & bílá (corporate)</option>
+                <option value="warm_terracotta">Teplá (oranžová, červená, okr)</option>
+                <option value="pastel_soft">Pastelová (jemná, uklidňující)</option>
+                <option value="neon_future">Neon (futuristická)</option>
+                <option value="nature_earth">Přírodní (zelená, hnědá, béžová)</option>
+                <option value="monochrome">Monochromatická</option>
+              </optgroup>
+              <optgroup label="Specializované">
+                <option value="luxury_black_gold">Luxusní (černá + zlato)</option>
+                <option value="academic_navy_gray">Akademická (tmavě modrá + šedá)</option>
+                <option value="educational_blue_yellow">Edukační (modrá + žlutá kontrast)</option>
+                <option value="high_tech_indigo_cyan">High-tech (indigo + cyan)</option>
+                <option value="vintage_sepia">Vintage (sepia + krémová)</option>
+                <option value="crisis_red_yellow_black">Krizová (červená + žlutá + černá)</option>
+                <option value="sport_red_navy">Sportovní (červená + navy)</option>
+                <option value="health_clean">Zdravotnická (čistá bílá + modrozelená)</option>
+                <option value="eco_green_beige">Zelená ekonomika (tmavě zelená + béžová)</option>
+                <option value="night_mode">Noční režim (tmavý + vysoký kontrast)</option>
+              </optgroup>
             </select>
           </label>
 
@@ -232,6 +278,9 @@ Zadej témata a klikni na „Generovat prompt“.
       </p>
     </footer>
 
+    <script src="styles/presets.js"></script>
+    <script src="styles/layoutPresets.js"></script>
+    <script src="styles/colorModes.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
